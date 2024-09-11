@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SimHash {
-    private static int Vectorsize=64;//设置向量维度为32
+    private static int Vectorsize=64;//设置向量维度为64
     private static int[] vector=new int[Vectorsize];//向量
 
     public static int getVectorsize() {
