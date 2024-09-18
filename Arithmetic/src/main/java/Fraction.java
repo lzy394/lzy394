@@ -2,7 +2,7 @@ public class Fraction {
     private int numerator=0;//分子
     private int denominator=1;//分母
     //private int number=0;//整数部分
-    public Fraction(String s) throws Exception {
+    public Fraction(String s)  {
         if(!s.contains("'")&&!s.contains("/")){
             numerator=Integer.parseInt(s);
         }
@@ -19,14 +19,19 @@ public class Fraction {
             denominator=Integer.parseInt(temp[1]);
         }
         if(denominator==0){
-            throw new Exception("分母不能为0");
+            throw new RuntimeException("分母不能为0");
         }
     }
-    private Fraction (int number,int numerator,int denominator){
+
+    private Fraction (int numerator,int denominator){
         this.numerator=numerator;
         this.denominator=denominator;
+        if(denominator==0){
+            throw new RuntimeException("分母不能为0");
+        }
     }
-    private static int gcd(int a,int b){
+
+    private static int gcd(int a,int b){//求最大公因数
         while(b!=0) {
             int temp = b;
             b = a % b;
@@ -34,55 +39,62 @@ public class Fraction {
         }
         return a;
     }
-    public Fraction operation(String operator,Fraction f1,Fraction f2) {
-        switch (operator) {
-            //case"+":return add(f1,f2);
-//                case"-":return sub(f);
-            //case"×":return mul(f1,f2);
-//                case"÷":return div(f);
-        }
-        return null;
+
+    public static Fraction operation(String operator,Fraction fa,Fraction fb) {//运算
+        return switch (operator) {
+            case "+" -> add(fa, fb);
+            case "-" -> sub(fa, fb);
+            case "×" -> mul(fa, fb);
+            case "÷" -> div(fa, fb);
+            default -> null;
+        };
     }
-//    private static Fraction add(Fraction fa,Fraction fb){
-//        int fa1=fa.number,fb1=fb.number;
-//        int fa2=fa.numerator,fb2=fb.numerator;
-//        int fa3=fa.denominator,fb3=fb.denominator;
-//        int number=fa1+fb1;
-//        int numerator=fa2*fb3+fb2*fa3;
-//        int denominator=fa3*fb3;
-//        Fraction f=new Fraction(number,numerator,denominator);
-//        ProperFraction(f);
-//        return f;
-//    }
 
-//    private static Fraction mul(Fraction f){
-//        int number=this.number;
-//        int f_number=f.number;
-//        int f_numerator=f.numerator;
-//        int f_denominator=f.denominator;
-//        this.number*=f_number;
-//        this.numerator=number*this.denominator*f_numerator+this.numerator*f_number*f_denominator+ this.numerator*f_numerator;
-//        this.denominator*=f_denominator;
-//        ProperFraction();
-//        return this;
-//    }
+    private static Fraction add(Fraction fa,Fraction fb){//加法
+        int numerator=fa.numerator*fb.denominator+fb.numerator*fa.denominator;
+        int denominator=fa.denominator*fb.denominator;
+        return new Fraction(numerator,denominator);
+    }
 
+    private static Fraction sub(Fraction fa,Fraction fb) {//减法
+        int numerator=fa.numerator*fb.denominator-fb.numerator*fa.denominator;
+        int denominator=fa.denominator*fb.denominator;
+        return new Fraction(numerator,denominator);
+    }
 
+    private static Fraction mul(Fraction fa,Fraction fb){//乘法
+        int numerator=fa.numerator*fb.numerator;
+        int denominator=fa.denominator*fb.denominator;
+        return new Fraction(numerator,denominator);
+    }
 
-    public String toString() {
+    private static Fraction div(Fraction fa,Fraction fb) {//除法
+        int numerator=fa.numerator*fb.denominator;
+        int denominator=fa.denominator*fb.numerator;
+        return new Fraction(numerator,denominator);
+    }
+
+    public String toString() {//输出
+        if(this.numerator==0) return "0";
+        if(this.denominator==1) return this.numerator+"";
+        boolean tag= (numerator > 0 && denominator < 0) || (numerator < 0 && denominator > 0);//判断是否为负数
+        numerator=Math.abs(this.numerator);
+        denominator=Math.abs(this.denominator);
         int g=gcd(this.numerator,this.denominator);
         if (numerator < denominator) {
-            return numerator/g + "/" + denominator/g;
+            if(!tag)return numerator/g + "/" + denominator/g;
+            else return "-" + numerator/g + "/" + denominator/g;
         } else {
             int number=this.numerator/this.denominator;
             int r=this.numerator%this.denominator;
             if(r==0) {
-                return number + "";
+                if(!tag)return number + "";
+                else return "-" + number;
             }else{
                 int r1=gcd(r,this.denominator);
-                return number+"'"+r/r1+"/"+this.denominator/r1;
+                if(!tag)return number+"'"+r/r1+"/"+this.denominator/r1;
+                else return "-" + number+"'"+r/r1+"/"+this.denominator/r1;
             }
-
         }
     }
 }
