@@ -24,10 +24,28 @@ public class Fraction {
     }
 
     private Fraction (int numerator,int denominator){
+        if(denominator==0) {
+            throw new RuntimeException("分母不能为0");
+        }
         this.numerator=numerator;
         this.denominator=denominator;
-        if(denominator==0){
-            throw new RuntimeException("分母不能为0");
+    }
+
+
+    public static Fraction RandomFraction(int max){
+        int p=(int)(Math.random()*100)+1;
+        if(p<=75){//75%的概率生成整数
+            int numerator=(int)(Math.random()*max);
+            if(numerator==0)
+                numerator=1;
+            return new Fraction(numerator,1);
+        }
+        else{
+            int denominator=(int)(Math.random()*max)+1;
+            if(denominator==max&&denominator!=1)
+                denominator--;
+            int numerator=(int)(Math.random()*denominator*max)+1;
+            return new Fraction(numerator,denominator);
         }
     }
 
@@ -74,6 +92,10 @@ public class Fraction {
         return new Fraction(numerator,denominator);
     }
 
+    public static Boolean isNegative(Fraction f){
+        return f.toString().contains("-");
+    }
+
     public String toString() {//输出
         if(this.numerator==0) return "0";
         if(this.denominator==1) return this.numerator+"";
@@ -98,3 +120,4 @@ public class Fraction {
         }
     }
 }
+
