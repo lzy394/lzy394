@@ -1,7 +1,10 @@
+import org.w3c.dom.Node;
+
 public class BinaryTree {
     private String val;
     private BinaryTree left;
     private BinaryTree right;
+
     private static final String []Symbol={"+","-","×","÷"};
     public BinaryTree() {//默认构造函数
         this.val = null;
@@ -17,10 +20,6 @@ public class BinaryTree {
 
     public String getVal() {
         return val;
-    }
-
-    public void setVal(String val) {
-        this.val = val;
     }
 
     public BinaryTree getLeft() {
@@ -62,7 +61,7 @@ public class BinaryTree {
         if(n==0) return null;
         int num=2*n+1;
         BinaryTree []Node=new BinaryTree[num];
-        for(int i=0;i<num;i++){
+        for(int i=0;i<num;i++){//初始化
             if(i<n) {
                 int r = (int) (Math.random() * 4);
                 Node[i] = new BinaryTree(Symbol[r]);
@@ -71,31 +70,37 @@ public class BinaryTree {
                 Node[i]=new BinaryTree(Fraction.RandomFraction(max).toString());
             }
         }
-        for(int i=0;i<n;i++){
+        for(int i=0;i<n;i++){//连接
             if(2*i+1<num) Node[i].setLeft(Node[2*i+1]);
             if(2*i+2<num) Node[i].setRight(Node[2*i+2]);
         }
-        for(int i=n-1;i>=0;i--){
+        for(int i=n-1;i>=0;i--){//更改不合理的节点
             if(Node[i].getVal().equals("-")) {
-                if (Fraction.isNegative(getResult(Node[i]))) {
+                Fraction result=getResult(Node[i]);
+                if (Fraction.isNegative(result)) {
                     Swap(Node[i]);
                 }
+                if(result.toString().equals("0"))
+                    RandomBinaryTree(n,max);//重新生成
             }
-            if(Node[i].getVal().equals("÷")) {
-                if(getResult(Node[i].getRight()).toString().equals("0"))
-                    RandomBinaryTree(n,max);
+            if(Node[i].getVal().equals("÷")) {//除法运算符右边不能为0
+                Fraction result=getResult(Node[i].getRight());
+                if(Fraction.isNegative(result)||result.toString().equals("0"))
+                    RandomBinaryTree(n,max);//重新生成
             }
         }
-        System.out.println(getResult(Node[0]));
         return Node[0];
     }
 
-    private static Fraction getResult(BinaryTree T){
+    public static Fraction getResult(BinaryTree T){//计算结果
         if(T==null) return null;
         if(T.getLeft()==null && T.getRight()==null){
             return new Fraction(T.getVal());
         }
-        return Fraction.operation(T.getVal(),getResult(T.getLeft()),getResult(T.getRight()));
+        Fraction LeftResult=getResult(T.getLeft());
+        Fraction RightResult=getResult(T.getRight());
+        if(T.getVal().equals("÷")&& RightResult.toString().equals("0"))
+            return new Fraction("-1");//返回负数说明计算出错
+        return Fraction.operation(T.getVal(),LeftResult,RightResult);
     }
-
 }

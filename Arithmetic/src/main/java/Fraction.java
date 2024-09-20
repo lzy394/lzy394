@@ -1,5 +1,5 @@
 public class Fraction {
-    private int numerator=0;//分子
+    private int numerator;//分子
     private int denominator=1;//分母
     //private int number=0;//整数部分
     public Fraction(String s)  {
@@ -22,7 +22,6 @@ public class Fraction {
             throw new RuntimeException("分母不能为0");
         }
     }
-
     private Fraction (int numerator,int denominator){
         if(denominator==0) {
             throw new RuntimeException("分母不能为0");
@@ -30,8 +29,6 @@ public class Fraction {
         this.numerator=numerator;
         this.denominator=denominator;
     }
-
-
     public static Fraction RandomFraction(int max){
         int p=(int)(Math.random()*100)+1;
         if(p<=75){//75%的概率生成整数
@@ -96,6 +93,7 @@ public class Fraction {
         return f.toString().contains("-");
     }
 
+    @Override//重写toString方法
     public String toString() {//输出
         if(this.numerator==0) return "0";
         if(this.denominator==1) return this.numerator+"";
