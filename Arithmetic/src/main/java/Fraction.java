@@ -1,7 +1,7 @@
 public class Fraction {
     private int numerator;//分子
     private int denominator=1;//分母
-    //private int number=0;//整数部分
+
     public Fraction(String s)  {
         if(!s.contains("'")&&!s.contains("/")){
             numerator=Integer.parseInt(s);
@@ -22,7 +22,7 @@ public class Fraction {
             throw new RuntimeException("分母不能为0");
         }
     }
-    private Fraction (int numerator,int denominator){
+    Fraction(int numerator, int denominator){
         if(denominator==0) {
             throw new RuntimeException("分母不能为0");
         }
@@ -84,6 +84,8 @@ public class Fraction {
     }
 
     private static Fraction div(Fraction fa,Fraction fb) {//除法
+        if(fb.numerator==0)
+            throw new RuntimeException("除数不能为0");
         int numerator=fa.numerator*fb.denominator;
         int denominator=fa.denominator*fb.numerator;
         return new Fraction(numerator,denominator);

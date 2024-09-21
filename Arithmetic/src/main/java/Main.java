@@ -9,17 +9,18 @@ public class Main {
     private static final String exercises_filePath="Exercises1.txt";
     private static final String answers_filePath="Answers1.txt";
     public static void main(String[] args)  {
-        String []str1={"-n","10000","-r","100"};
-        String []str2={"-e","exercisefile.txt","-a","answersfile.txt"};
+//        String []str1={"-n","10000","-r","100"};
+//        String []str2={"-e","exercisefile.txt","-a","answersfile.txt"};
+
         try {
-            start(str1);
+            start(args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void start(String[] args) throws IOException {
-        if(args.length!=4){
+        if(args.length!=4||args.length!=2){
             throw new RuntimeException("输入的参数个数有误");
         }
         int num=0;
@@ -51,11 +52,13 @@ public class Main {
             }
         }
         if(num!=0&&max==0)
-            max=num;//只要求生成题目时，最大范围与题目数一致
+            max=10;//只要求生成题目时，最大范围与题目数一致
         if(num==0&&max!=0)
             num=10;//只要求题目范围时，默认生成10道题目
         if(num!=0&&max!=0) generate(num,max);
         if(exercisefile!=null&&answerfile!=null) Judge(exercisefile,answerfile);
+        if(num==0&&max==0&&exercisefile==null&&answerfile==null)
+            throw new RuntimeException("输入的参数有误");
     }
     private static void generate(int num,int max) throws IOException {
         int i=0;
