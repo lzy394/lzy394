@@ -6,12 +6,13 @@ import java.util.Set;
 
 public class Main {
     public static Set<String> Result= new HashSet<>();
-    private static final String exercises_filePath="Exercises1.txt";
-    private static final String answers_filePath="Answers1.txt";
+    private static final String exercises_filePath="Exercises.txt";
+    private static final String answers_filePath="Answers.txt";
     public static void main(String[] args)  {
-//        String []str1={"-n","10000","-r","100"};
-//        String []str2={"-e","exercisefile.txt","-a","answersfile.txt"};
-
+        int length=args.length;
+        if(length!=4&&length!=2){
+            throw new RuntimeException("输入的参数个数有误");
+        }
         try {
             start(args);
         } catch (IOException e) {
@@ -20,9 +21,6 @@ public class Main {
     }
 
     public static void start(String[] args) throws IOException {
-        if(args.length!=4||args.length!=2){
-            throw new RuntimeException("输入的参数个数有误");
-        }
         int num=0;
         int max=0;
         String exercisefile=null;
@@ -64,53 +62,51 @@ public class Main {
         int i=0;
         while(i<num){
             int num_Symbol=(int)(Math.random()*3+1);//随机生成1-3个运算符
-            Equation e=new Equation(num_Symbol,max);
+            Equation e=new Equation(num_Symbol,max);//生成表达式
             String result=e.getResult().toString();
-            System.out.println(result);
             if(!Result.isEmpty()&&Result.contains(result))
                 continue;
-            Result.add(result);
+            Result.add(result);//记录结果，防止重复
             String questions=(i+1)+". "+e.getinfixExpression()+"=";
             result=(i+1)+". "+result;
-            FileUtil.WriteFile(exercises_filePath,questions);
-            FileUtil.WriteFile(answers_filePath,result);
+            FileUtil.WriteFile(exercises_filePath,questions);//写入题目
+            FileUtil.WriteFile(answers_filePath,result);//写入答案
             i++;
         }
     }
-
     private static void Judge(String exercises,String answers) throws IOException {
         List<String> exerciseList=new ArrayList<>();
         List<String> answerList=new ArrayList<>();
-        FileUtil.ReadFile(exercises,exerciseList);
-        FileUtil.ReadFile(answers,answerList);
+        FileUtil.ReadFile(exercises,exerciseList);//读取题目
+        FileUtil.ReadFile(answers,answerList);//读取答案
         if(exerciseList.size()!=answerList.size()){
             throw new RuntimeException("题目数量与答案数量不一致");
         }
         boolean []tag=new boolean[exerciseList.size()];//标记答案是否正确
         int num=0;//标记正确答案个数
-        for(int i=0;i<exerciseList.size();i++){
+        for(int i=0;i<exerciseList.size();i++){//遍历题目
             Equation e=new Equation(exerciseList.get(i));
-            if(e.getResult().toString().equals(answerList.get(i))){
+            if(e.getResult().toString().equals(answerList.get(i))){//判断答案是否正确
                 tag[i]=true;
-                num++;
+                num++;//记录正确的答案个数
             }
         }
         StringBuilder Correct= new StringBuilder("Correct:" + num + "(");
         StringBuilder Wrong= new StringBuilder("Wrong:" + (exerciseList.size() - num) + "(");
-        for(int i=0;i<tag.length;i++){
+        for(int i=0;i<tag.length;i++){//将正确答案和错误答案情况分别写入文件
             if(tag[i])
                 Correct.append(i + 1).append(",");
             else
                 Wrong.append(i + 1).append(",");
         }
-        if(Correct.charAt(Correct.length()-1)!='(')
+        if(Correct.charAt(Correct.length()-1)!='(')//去除最后一个逗号
             Correct = new StringBuilder(Correct.substring(0, Correct.length() - 1) + ")");
         else
-            Correct.append(")");
-        if(Wrong.charAt(Wrong.length()-1)!='(')
+            Correct.append(")");//补全括号
+        if(Wrong.charAt(Wrong.length()-1)!='(')//去除最后一个括号
             Wrong = new StringBuilder(Wrong.substring(0, Wrong.length() - 1) + ")");
         else
-            Wrong.append(")");
+            Wrong.append(")");//补全括号
         FileUtil.WriteFile("Grade.txt", Correct.toString());
         FileUtil.WriteFile("Grade.txt", Wrong.toString());
     }

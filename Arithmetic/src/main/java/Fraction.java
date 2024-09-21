@@ -22,7 +22,7 @@ public class Fraction {
             throw new RuntimeException("分母不能为0");
         }
     }
-    Fraction(int numerator, int denominator){
+    public Fraction(int numerator, int denominator){
         if(denominator==0) {
             throw new RuntimeException("分母不能为0");
         }
@@ -34,14 +34,14 @@ public class Fraction {
         if(p<=75){//75%的概率生成整数
             int numerator=(int)(Math.random()*max);
             if(numerator==0)
-                numerator=1;
+                numerator=1;//防止生成0
             return new Fraction(numerator,1);
         }
         else{
             int denominator=(int)(Math.random()*max)+1;
             if(denominator==max&&denominator!=1)
-                denominator--;
-            int numerator=(int)(Math.random()*denominator*max)+1;
+                denominator--;//防止超过范围
+            int numerator=(int)(Math.random()*denominator*max)+1;//分子范围在1到分母*max之间
             return new Fraction(numerator,denominator);
         }
     }
@@ -57,10 +57,10 @@ public class Fraction {
 
     public static Fraction operation(String operator,Fraction fa,Fraction fb) {//运算
         return switch (operator) {
-            case "+" -> add(fa, fb);
-            case "-" -> sub(fa, fb);
-            case "×" -> mul(fa, fb);
-            case "÷" -> div(fa, fb);
+            case "+" -> add(fa, fb);//加法
+            case "-" -> sub(fa, fb);//减法
+            case "×" -> mul(fa, fb);//乘法
+            case "÷" -> div(fa, fb);//除法
             default -> null;
         };
     }

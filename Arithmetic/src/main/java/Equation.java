@@ -49,10 +49,10 @@ public class Equation {
             if(a[i]==1) {//如果已经处理过，则跳过
                 continue;
             }
-            if(c=='(') {
+            if(c=='(') {//如果遇到左括号，则找到匹配的右括号
                 boolean tag=true;
                 if(i>=1) {
-                    if(Expression.charAt(i-1)=='×' || Expression.charAt(i-1)=='÷' ) {
+                    if(Expression.charAt(i-1)=='×' || Expression.charAt(i-1)=='÷' ) {//如果左括号前面是×或÷，则不处理
                         continue;
                     }
                 }
@@ -60,8 +60,8 @@ public class Equation {
                 int count=0;
                 boolean tag_sub =true;
                 if(i>=1) {
-                    if(Expression.charAt(i-1)=='-') {
-                        tag_sub =false;
+                    if(Expression.charAt(i-1)=='-') {//如果左括号前面是-，则括号里有没有+-，有则不处理
+                        tag_sub =false;//括号里没有+-
                     }
                 }
                 while(true) { //找到匹配的右括号
@@ -69,13 +69,13 @@ public class Equation {
                         tag=false;
                         break;
                     }
-                    if(Expression.charAt(index)==')' && count==0) {
+                    if(Expression.charAt(index)==')' && count==0) {//找到匹配的右括号
                         break;
                     }
-                    if(Expression.charAt(index)=='(') {
+                    if(Expression.charAt(index)=='(') {//如果遇到左括号，则计数加1
                         count++;
                     }
-                    if(Expression.charAt(index)==')') {
+                    if(Expression.charAt(index)==')') {//如果遇到右括号，则计数减1
                         count--;
                     }
                     index++;
@@ -83,19 +83,19 @@ public class Equation {
                 if(!tag) {//如果括号里有+，则不处理
                   continue;
                 }
-                boolean tag_delete=true;
+                boolean tag_delete=true;//记录是否删除括号
                 if(index+1<Expression.length()) {//避免越界
                     if(Expression.charAt(index+1)=='×' || Expression.charAt(index+1)=='÷') {  //判断右括号右边是否有乘除
                         tag_delete=false;
                     }
                 }
-                if(tag_delete) {   //记录删除的括号位置
+                if(tag_delete) {//记录删除的括号位置
                     a[i]=1;
                     a[index]=1;
                 }
             }
         }
-        for(int i=0;i<Expression.length();i++) {
+        for(int i=0;i<Expression.length();i++) {//删除括号
             if(a[i]==0) {
                 result.append(Expression.charAt(i));
             }
@@ -116,7 +116,7 @@ public class Equation {
     }
 
     private String infixToPostfix(String infixExpression){
-        String []Expression=infixExpression.split("\\s+");
+        String []Expression=infixExpression.split("\\s+");//按空格划分
         StringBuilder result= new StringBuilder();
         Stack<String> S=new Stack<>();
         for (String s : Expression) {
@@ -135,10 +135,10 @@ public class Equation {
                 while (!S.isEmpty() && SymbolPriority(S.peek()) >= SymbolPriority(s)) {
                     result.append(S.pop()).append(" ");
                 }
-                S.push(s);
+                S.push(s);//入栈
             }
         }
-        while(!S.isEmpty()) {
+        while(!S.isEmpty()) {//栈不空
             result.append(S.pop()).append(" ");
         }
         return result.toString();//输出后缀表达式
@@ -149,22 +149,17 @@ public class Equation {
         Stack<Fraction>  S=new Stack<>();
         for (String s : exp) {
             if (!isSymbol(s)) {
-                S.push(new Fraction(s));
+                S.push(new Fraction(s));//分数直接入栈
             } else {
                 if (S.size() < 2) {
                     throw new RuntimeException("后缀表达式异常");
                 }
                 Fraction b = S.pop();
                 Fraction a = S.pop();
-                S.push(Fraction.operation(s, a, b));
+                S.push(Fraction.operation(s, a, b));//计算结果
             }
         }
-        return S.pop();
+        return S.pop();//最终的结果出栈
     }
 
-    public static void main(String[] args) {
-        Equation e=new Equation("(38'74/75×63'19/64)×(55×52'17/25)");
-        System.out.println(e.getPostfixExpression());
-        System.out.println(e.getResult().toString());
-    }
 }
