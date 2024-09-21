@@ -1,6 +1,4 @@
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 public class EquationTest {
     @Test
     public void test1(){//测试随机生成的表达式

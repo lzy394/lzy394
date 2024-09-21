@@ -19,7 +19,7 @@ public class FileUtil {
         }
     }
 
-    public static void ReadFile(String Path, List<String> list) throws FileNotFoundException {
+    public static void ReadFile(String Path, List<String> list)  {
         File f=new File(Path);
         if(!f.exists())
             throw new RuntimeException("文件不存在");

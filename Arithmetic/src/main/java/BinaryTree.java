@@ -1,5 +1,3 @@
-import org.w3c.dom.Node;
-
 public class BinaryTree {
     private String val;
     private BinaryTree left;
