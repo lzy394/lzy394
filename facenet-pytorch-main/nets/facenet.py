@@ -2,7 +2,7 @@ import torch.nn as nn
 from torch.hub import load_state_dict_from_url
 from torch.nn import functional as F
 
-from nets.inception_resnetv1 import InceptionResnetV1
+
 from nets.mobilenet import MobileNetV1
 
 
